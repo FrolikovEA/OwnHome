@@ -12,18 +12,18 @@ class AttrImage:
 
 
 class GettingFileDisk:
-    def save(self):
+    def _save_byte(self):
         pass
 
-    def getFile(self):
+    def get_file_byte(self):
         pass
 
 
 class GettingFileCloud:
-    def save(self):
+    def _save_byte(self):
         pass
 
-    def getFile(self):
+    def get_file_byte(self):
         pass
 
 
@@ -40,18 +40,35 @@ class BaseFile:
             if hasattr(self, item_param[0]):
                 setattr(self, item_param[0], item_param[1])
 
+    def _save_attr(self):
+        pass
 
-class PhotoFile(BaseFile, AttrPhoto, GettingFileDisk):
+
+class SpecificFileSaveAndGettingForDisk(BaseFile, GettingFileDisk):
+    def save(self):
+        super()._save_byte()
+        super()._save_attr()
+
+
+class SpecificFileSaveAndGettingForCloud(BaseFile, GettingFileCloud):
+    def save(self):
+        super()._save_byte()
+        super()._save_attr()
+
+
+class PhotoFile(SpecificFileSaveAndGettingForDisk, AttrPhoto):
     def convert_to_png(self):
         pass
 
 
-class MoveFile(BaseFile, AttrMove, GettingFileDisk):
+class MoveFile(SpecificFileSaveAndGettingForDisk, AttrMove):
     pass
 
 
-class ImageFile(BaseFile, AttrMove, GettingFileDisk):
+class ImageFile(SpecificFileSaveAndGettingForCloud, AttrMove):
     pass
 
 
 A = PhotoFile(name="sdf", size=100, data_create="10.20.2015", owner="Mi", testFile="sdf", testAtttr="ddd")
+A.get_file_byte()
+A.save()
